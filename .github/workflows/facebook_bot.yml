@@ -1,0 +1,73 @@
+name: Facebook Bot
+
+on:
+  schedule:
+    # 5 posts par jour — heures UTC (adaptez selon votre fuseau)
+    - cron: "0 7 * * *"   # 09h00 Paris (hiver) / 09h00 CEST-2
+    - cron: "0 9 * * *"   # 11h00 Paris
+    - cron: "0 12 * * *"  # 14h00 Paris
+    - cron: "0 15 * * *"  # 17h00 Paris
+    - cron: "0 18 * * *"  # 20h00 Paris
+  workflow_dispatch:        # Déclenchement manuel pour les tests
+
+permissions:
+  contents: write           # Nécessaire pour commit state.json
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: facebook-bot   # Empêche deux runs simultanés
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Restore Facebook cookies
+        if: ${{ secrets.FB_COOKIES != '' }}
+        env:
+          FB_COOKIES_JSON: ${{ secrets.FB_COOKIES }}
+        run: echo "$FB_COOKIES_JSON" > fb_cookies.json
+
+      - name: Run bot
+        env:
+          FB_EMAIL: ${{ secrets.FB_EMAIL }}
+          FB_PASSWORD: ${{ secrets.FB_PASSWORD }}
+          FB_PAGE_URL: ${{ secrets.FB_PAGE_URL }}
+          FB_COOKIES: ${{ secrets.FB_COOKIES }}
+          DELAY_BETWEEN_POSTS: "90"
+        run: |
+          cd src
+          python main.py
+
+      - name: Save updated Facebook cookies as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fb-cookies-${{ github.run_id }}
+          path: fb_cookies.json
+          retention-days: 7
+
+      - name: Commit state.json
+        if: success()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet || git commit -m "chore: update bot state [skip ci]"
+          git push
