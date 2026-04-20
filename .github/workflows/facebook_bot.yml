@@ -33,35 +33,16 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          playwright install chromium
-          playwright install-deps chromium
-
-      - name: Restore Facebook cookies
-        if: ${{ secrets.FB_COOKIES != '' }}
-        env:
-          FB_COOKIES_JSON: ${{ secrets.FB_COOKIES }}
-        run: echo "$FB_COOKIES_JSON" > fb_cookies.json
+        run: pip install -r requirements.txt
 
       - name: Run bot
         env:
-          FB_EMAIL: ${{ secrets.FB_EMAIL }}
-          FB_PASSWORD: ${{ secrets.FB_PASSWORD }}
-          FB_PAGE_URL: ${{ secrets.FB_PAGE_URL }}
-          FB_COOKIES: ${{ secrets.FB_COOKIES }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
           DELAY_BETWEEN_POSTS: "90"
         run: |
           cd src
           python main.py
-
-      - name: Save updated Facebook cookies as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: fb-cookies-${{ github.run_id }}
-          path: fb_cookies.json
-          retention-days: 7
 
       - name: Commit state.json
         if: success()

@@ -4,3 +4,5 @@ __pycache__/
 fb_cookies.json
 *.tmp
 /tmp/
+*.png
+.DS_Store

@@ -9,6 +9,13 @@ import os
 import sys
 import time
 
+# Charge .env en local (ignoré si python-dotenv absent ou si le fichier n'existe pas)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
+except ImportError:
+    pass
+
 from image_handler import get_image_path
 from facebook_poster import FacebookPoster
 from rss_reader import get_rss_items
@@ -89,6 +96,7 @@ def main():
         poster.post(rss_text, image_path=rss_image)
         logger.info("Article RSS publié.")
     except Exception as exc:
+        #breakpoint()
         logger.error(f"Échec de la publication RSS : {exc}")
         sys.exit(1)
     finally:
