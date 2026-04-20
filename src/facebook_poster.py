@@ -12,11 +12,23 @@ class FacebookPoster:
         self.page_id = os.environ["FB_PAGE_ID"]
         self.token = os.environ["FB_PAGE_TOKEN"]
 
-    def post(self, text, image_path=None):
-        if image_path and os.path.exists(image_path):
+    def post(self, text, image_path=None, link=None):
+        if link:
+            self._post_link(text, link)
+        elif image_path and os.path.exists(image_path):
             self._post_with_photo(text, image_path)
         else:
             self._post_text(text)
+
+    def _post_link(self, text, link):
+        """Poste un lien : Facebook affiche l'image OG de l'URL, cliquable vers le lien."""
+        resp = requests.post(
+            f"{GRAPH_URL}/{self.page_id}/feed",
+            data={"message": text, "link": link, "access_token": self.token},
+            timeout=30,
+        )
+        self._check(resp)
+        logger.info(f"Post lien publié : {resp.json().get('id')}")
 
     def _post_text(self, text):
         resp = requests.post(

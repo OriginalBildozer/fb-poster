@@ -114,16 +114,10 @@ def main():
     logger.info("Publication du lien d'affiliation sur Facebook…")
     aff_text = build_affiliate_text(affiliate)
     try:
-        poster.post(aff_text, image_path=aff_image)
+        poster.post(aff_text, link=affiliate.get("url"))
         logger.info("Lien d'affiliation publié.")
     except Exception as exc:
         logger.error(f"Échec de la publication d'affiliation : {exc}")
-    finally:
-        if aff_image:
-            try:
-                os.unlink(aff_image)
-            except OSError:
-                pass
 
     # --- Save state ---
     from datetime import datetime, timezone
