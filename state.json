@@ -1,17 +1,18 @@
 {
   "posted_ids": [
-    "3c49562787f60075e444a9696c26ae4a",
-    "00c82f0fcf60cee93cc72db8292a6418",
-    "1b602bcbf7bb7a511346c1b4a4c859b4",
-    "17d8d552a25b170af1036ded53dd3223",
-    "bc449e117c4c5e90baabd8c8b5cdfc56",
-    "d585fa54d3d7acebb30bad6d8dba8f49",
-    "6df46f8fb6c00cb17ee0f28dbcdefb76",
-    "e3ba0efd0a40b08eb4f497119711ae15",
-    "1b0560428d3b87cee99e0e7ea3a8ee54",
     "1cb2635c5f522dfbf60956d804313885",
-    "99cd48c3d37aabdda8c83148fbf9ef4e"
+    "17d8d552a25b170af1036ded53dd3223",
+    "6df46f8fb6c00cb17ee0f28dbcdefb76",
+    "1b0560428d3b87cee99e0e7ea3a8ee54",
+    "00c82f0fcf60cee93cc72db8292a6418",
+    "d585fa54d3d7acebb30bad6d8dba8f49",
+    "99cd48c3d37aabdda8c83148fbf9ef4e",
+    "3c49562787f60075e444a9696c26ae4a",
+    "e3ba0efd0a40b08eb4f497119711ae15",
+    "1b602bcbf7bb7a511346c1b4a4c859b4",
+    "bc449e117c4c5e90baabd8c8b5cdfc56",
+    "d68e40a4dccf8561b962d29b08b712c3"
   ],
-  "affiliate_index": 3,
-  "last_run": "2026-04-23T19:14:15.099402+00:00"
+  "affiliate_index": 0,
+  "last_run": "2026-04-24T08:59:14.304291+00:00"
 }
